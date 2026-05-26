@@ -1,0 +1,77 @@
+{% template reminder_legacy_item %}
+{% assign title = item.name | default: item.title | default: item.n %}
+{% assign date = item.deadline | default: item.date | default: item.d %}
+{% assign priority = item.priority | default: item.p %}
+{% assign flagged = item.flagged | default: item.f %}
+{% assign list = item.list | default: item.list_name | default: item.l %}
+{% assign notes = item.notes | default: item.description | default: item.o %}
+
+<div class="item">
+  <div class="meta">
+    {% if flagged %}
+      <span class="index">!</span>
+    {% endif %}
+  </div>
+  <div class="content">
+    <span class="title title--small">{{ title }}</span>
+    {% if show_details %}
+      <div class="flex gap--small">
+        {% if date and date != "" %}
+          <span class="label label--small label--underline">{{ date }}</span>
+        {% endif %}
+        {% if priority and priority != "" and priority != "None" %}
+          <span class="label label--small label--underline">{{ priority }}</span>
+        {% endif %}
+        {% if list and list != "" %}
+          <span class="label label--small label--underline">{{ list }}</span>
+        {% endif %}
+      </div>
+      {% if notes and notes != "" %}
+        <span class="description" data-clamp="2">{{ notes }}</span>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endtemplate %}
+
+{% template reminder_v2_item %}
+{% assign title = item.title | default: item.name | default: item.n %}
+{% assign date = item.date | default: item.deadline | default: item.d %}
+{% assign notes = item.description | default: item.notes | default: item.o %}
+{% assign subtask_count = item.num_tasks | default: 0 %}
+
+<div class="item">
+  <div class="meta">
+    {% if item.idx %}
+      <span class="index">{{ item.idx }}</span>
+    {% endif %}
+  </div>
+  <div class="content">
+    <span class="title title--small">{{ title }}</span>
+    {% if show_details %}
+      <div class="flex gap--small">
+        {% if date and date != "" %}
+          <span class="label label--small label--underline">{{ date }}</span>
+        {% endif %}
+        {% if subtask_count > 0 %}
+          <span class="label label--small label--underline">{{ subtask_count }} subtasks</span>
+        {% endif %}
+      </div>
+      {% if notes and notes != "" %}
+        <span class="description" data-clamp="2">{{ notes }}</span>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endtemplate %}
+
+{% template title_bar %}
+<div class="title_bar">
+  <span class="title">Apple Reminders</span>
+  {% if list_name and data_time %}
+    <span class="instance">{{ list_name }} @ {{ data_time }}</span>
+  {% elsif trmnl.plugin_settings.custom_fields_values.expected_format %}
+    <span class="instance">{{ trmnl.plugin_settings.custom_fields_values.expected_format }}</span>
+  {% endif %}
+</div>
+{% endtemplate %}

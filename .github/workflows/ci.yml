@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift tests
+        run: swift test
+
+      - name: Install Liquid
+        run: gem install liquid -v 5.3.0 -N
+
+      - name: Validate TRMNL plugin
+        run: Scripts/validate-plugin.rb

@@ -1,0 +1,43 @@
+---
+strategy: webhook
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: ''
+polling_headers: ''
+polling_body: ''
+name: Resilient Apple Reminders
+refresh_interval: 60
+custom_fields:
+- keyname: about
+  name: About This Plugin
+  field_type: author_bio
+  description: Displays Apple Reminders on TRMNL using a local macOS sender that keeps reminder lists as stable JSON arrays.
+  github_url: https://github.com/steveafrost/trmnl-apple-reminders-sender
+- keyname: webhook_url
+  field_type: copyable_webhook_url
+  name: Webhook URL
+  description: Use this as TRMNL_WEBHOOK_URL for the macOS sender.
+  help_text: This appears after creating or saving the plugin instance.
+- keyname: sender_repo
+  field_type: copyable
+  name: Sender Repository
+  value: https://github.com/steveafrost/trmnl-apple-reminders-sender
+  description: Install this macOS sender to read Apple Reminders and post to this webhook.
+- keyname: expected_format
+  field_type: select
+  name: Expected Payload Format
+  default: legacy
+  options:
+  - legacy
+  - v2
+  description: Use legacy for overdue/today/future buckets or v2 for a single reminders array.
+- keyname: show_details
+  field_type: select
+  name: Show Details
+  default: 'yes'
+  options:
+  - 'yes'
+  - 'no'
+  description: Show reminder dates, notes, priorities, and list names where available.

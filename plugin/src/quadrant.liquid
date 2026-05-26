@@ -1,0 +1,24 @@
+{% assign show_details = false %}
+
+<div class="layout layout--col layout--top">
+  <div class="column" data-list-limit="true" data-list-hidden-count="true">
+    {% if reminders %}
+      {% for item in reminders %}
+        {% render "reminder_v2_item", item: item, show_details: show_details %}
+      {% else %}
+        <span class="description">No reminders due.</span>
+      {% endfor %}
+    {% elsif today.name or today.title or today.n %}
+      {% assign item = today %}
+      {% render "reminder_legacy_item", item: item, show_details: show_details %}
+    {% else %}
+      {% for item in today %}
+        {% render "reminder_legacy_item", item: item, show_details: show_details %}
+      {% else %}
+        <span class="description">No reminders due.</span>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% render "title_bar", trmnl: trmnl, list_name: list_name, data_time: data_time %}

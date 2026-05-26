@@ -1,0 +1,37 @@
+{% assign show_details = true %}
+{% if trmnl.plugin_settings.custom_fields_values.show_details == "no" %}
+{% assign show_details = false %}
+{% endif %}
+
+<div class="layout layout--col layout--top">
+  <div class="column" data-list-limit="true" data-list-hidden-count="true">
+    <div class="label label--underline mb--2">Reminders</div>
+    {% if reminders %}
+      {% for item in reminders %}
+        {% render "reminder_v2_item", item: item, show_details: show_details %}
+      {% else %}
+        <span class="description">No reminders due.</span>
+      {% endfor %}
+    {% elsif overdue.name or overdue.title or overdue.n %}
+      {% assign item = overdue %}
+      {% render "reminder_legacy_item", item: item, show_details: show_details %}
+    {% else %}
+      {% for item in overdue %}
+        {% render "reminder_legacy_item", item: item, show_details: show_details %}
+      {% endfor %}
+    {% endif %}
+
+    {% unless reminders %}
+      {% if today.name or today.title or today.n %}
+        {% assign item = today %}
+        {% render "reminder_legacy_item", item: item, show_details: show_details %}
+      {% else %}
+        {% for item in today %}
+          {% render "reminder_legacy_item", item: item, show_details: show_details %}
+        {% endfor %}
+      {% endif %}
+    {% endunless %}
+  </div>
+</div>
+
+{% render "title_bar", trmnl: trmnl, list_name: list_name, data_time: data_time %}

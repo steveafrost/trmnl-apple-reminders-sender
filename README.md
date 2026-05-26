@@ -1,8 +1,41 @@
-# TRMNL Apple Reminders Sender
+# TRMNL Apple Reminders
 
-A small native macOS sender for syncing Apple Reminders to a TRMNL custom plugin without relying on Apple Shortcuts as the data engine.
+A resilient Apple Reminders integration for TRMNL.
+
+This repo contains two pieces:
+
+1. A TRMNL plugin recipe in `plugin/`.
+2. A native macOS sender that reads Apple Reminders and posts stable JSON to the plugin webhook.
 
 The main bug this avoids: Shortcuts can collapse a one-item list into a single object. TRMNL Liquid templates usually expect arrays, so one reminder can render as blank rows or broken Liquid. This sender always emits stable JSON arrays.
+
+The bundled plugin is defensive too: it renders the correct array payload, the broken singleton payload, and the newer `v2` reminders-array payload.
+
+## TRMNL Plugin
+
+The plugin files live in:
+
+```text
+plugin/settings.yml
+plugin/src/full.liquid
+plugin/src/half_horizontal.liquid
+plugin/src/half_vertical.liquid
+plugin/src/quadrant.liquid
+```
+
+Create a TRMNL private plugin or recipe from those files, then copy the generated webhook URL into `TRMNL_WEBHOOK_URL` for the sender.
+
+The plugin supports:
+
+- `legacy`: `overdue`, `today`, `future`
+- `legacy singleton`: `today` as one object, the Shortcuts failure mode
+- `v2`: `version`, `list_name`, `data_time`, `reminders`
+
+Recommended sender format for this plugin:
+
+```sh
+--format legacy
+```
 
 ## Supported TRMNL Payloads
 
@@ -144,6 +177,19 @@ Example Node-RED HTTP payload for a local relay:
 
 ```sh
 swift test
+Scripts/validate-plugin.rb
 ```
 
 The test suite includes the regression that matters most for the current TRMNL failure: a single reminder in `today` remains encoded as `today: [ ... ]`, not `today: { ... }`.
+
+`Scripts/validate-plugin.rb` renders every plugin layout against all bundled sample payloads:
+
+- `plugin/samples/legacy-array.json`
+- `plugin/samples/legacy-singleton.json`
+- `plugin/samples/v2.json`
+
+It requires the Ruby `liquid` gem:
+
+```sh
+gem install --user-install liquid -v 5.3.0
+```
