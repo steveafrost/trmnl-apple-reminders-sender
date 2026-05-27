@@ -13,6 +13,7 @@ custom_fields:
 - keyname: about
   name: About This Plugin
   field_type: author_bio
+  category: productivity
   description: Displays Apple Reminders on TRMNL using a local macOS sender that keeps reminder lists as stable JSON arrays.
   github_url: https://github.com/steveafrost/trmnl-apple-reminders-sender
 - keyname: webhook_url
@@ -20,11 +21,6 @@ custom_fields:
   name: Webhook URL
   description: Use this as TRMNL_WEBHOOK_URL for the macOS sender.
   help_text: This appears after creating or saving the plugin instance.
-- keyname: sender_repo
-  field_type: copyable
-  name: Sender Repository
-  value: https://github.com/steveafrost/trmnl-apple-reminders-sender
-  description: Install this macOS sender to read Apple Reminders and post to this webhook.
 - keyname: expected_format
   field_type: select
   name: Expected Payload Format

@@ -34,6 +34,7 @@ https://github.com/steveafrost/trmnl-apple-reminders-sender
 
 ```text
 plugin/settings.yml
+plugin/icon.svg
 plugin/src/shared.liquid
 plugin/src/full.liquid
 plugin/src/half_horizontal.liquid
