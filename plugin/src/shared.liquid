@@ -13,21 +13,21 @@
     {% endif %}
   </div>
   <div class="content">
-    <span class="title title--small">{{ title }}</span>
+    <span class="title title--small">{{ title | escape }}</span>
     {% if show_details %}
       <div class="flex gap--small">
         {% if date and date != "" %}
-          <span class="label label--small label--underline">{{ date }}</span>
+          <span class="label label--small label--underline">{{ date | escape }}</span>
         {% endif %}
         {% if priority and priority != "" and priority != "None" %}
-          <span class="label label--small label--underline">{{ priority }}</span>
+          <span class="label label--small label--underline">{{ priority | escape }}</span>
         {% endif %}
         {% if list and list != "" %}
-          <span class="label label--small label--underline">{{ list }}</span>
+          <span class="label label--small label--underline">{{ list | escape }}</span>
         {% endif %}
       </div>
       {% if notes and notes != "" %}
-        <span class="description" data-clamp="2">{{ notes }}</span>
+        <span class="description" data-clamp="2">{{ notes | escape }}</span>
       {% endif %}
     {% endif %}
   </div>
@@ -47,18 +47,18 @@
     {% endif %}
   </div>
   <div class="content">
-    <span class="title title--small">{{ title }}</span>
+    <span class="title title--small">{{ title | escape }}</span>
     {% if show_details %}
       <div class="flex gap--small">
         {% if date and date != "" %}
-          <span class="label label--small label--underline">{{ date }}</span>
+          <span class="label label--small label--underline">{{ date | escape }}</span>
         {% endif %}
         {% if subtask_count > 0 %}
           <span class="label label--small label--underline">{{ subtask_count }} subtasks</span>
         {% endif %}
       </div>
       {% if notes and notes != "" %}
-        <span class="description" data-clamp="2">{{ notes }}</span>
+        <span class="description" data-clamp="2">{{ notes | escape }}</span>
       {% endif %}
     {% endif %}
   </div>
@@ -69,9 +69,9 @@
 <div class="title_bar">
   <span class="title">Apple Reminders</span>
   {% if list_name and data_time %}
-    <span class="instance">{{ list_name }} @ {{ data_time }}</span>
+    <span class="instance">{{ list_name | escape }} @ {{ data_time | escape }}</span>
   {% elsif trmnl.plugin_settings.custom_fields_values.expected_format %}
-    <span class="instance">{{ trmnl.plugin_settings.custom_fields_values.expected_format }}</span>
+    <span class="instance">{{ trmnl.plugin_settings.custom_fields_values.expected_format | escape }}</span>
   {% endif %}
 </div>
 {% endtemplate %}
