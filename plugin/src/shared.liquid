@@ -7,30 +7,21 @@
 {% assign notes = item.notes | default: item.description | default: item.o %}
 
 <div class="item">
-  <div class="meta">
-    {% if flagged %}
-      <span class="index">!</span>
+  <span class="title title--small">{% if flagged %}! {% endif %}{{ title | escape }}</span>
+  {% if show_details %}
+    {% if date and date != "" %}
+      <span class="description">{{ date | escape }}</span>
     {% endif %}
-  </div>
-  <div class="content">
-    <span class="title title--small">{{ title | escape }}</span>
-    {% if show_details %}
-      <div class="flex gap--small">
-        {% if date and date != "" %}
-          <span class="label label--small label--underline">{{ date | escape }}</span>
-        {% endif %}
-        {% if priority and priority != "" and priority != "None" %}
-          <span class="label label--small label--underline">{{ priority | escape }}</span>
-        {% endif %}
-        {% if list and list != "" %}
-          <span class="label label--small label--underline">{{ list | escape }}</span>
-        {% endif %}
-      </div>
-      {% if notes and notes != "" %}
-        <span class="description" data-clamp="2">{{ notes | escape }}</span>
-      {% endif %}
+    {% if priority and priority != "" and priority != "None" %}
+      <span class="description">{{ priority | escape }}</span>
     {% endif %}
-  </div>
+    {% if list and list != "" %}
+      <span class="description">{{ list | escape }}</span>
+    {% endif %}
+    {% if notes and notes != "" %}
+      <span class="description" data-clamp="2">{{ notes | escape }}</span>
+    {% endif %}
+  {% endif %}
 </div>
 {% endtemplate %}
 
@@ -41,27 +32,18 @@
 {% assign subtask_count = item.num_tasks | default: 0 %}
 
 <div class="item">
-  <div class="meta">
-    {% if item.idx %}
-      <span class="index">{{ item.idx }}</span>
+  <span class="title title--small">{% if item.idx %}{{ item.idx }}. {% endif %}{{ title | escape }}</span>
+  {% if show_details %}
+    {% if date and date != "" %}
+      <span class="description">{{ date | escape }}</span>
     {% endif %}
-  </div>
-  <div class="content">
-    <span class="title title--small">{{ title | escape }}</span>
-    {% if show_details %}
-      <div class="flex gap--small">
-        {% if date and date != "" %}
-          <span class="label label--small label--underline">{{ date | escape }}</span>
-        {% endif %}
-        {% if subtask_count > 0 %}
-          <span class="label label--small label--underline">{{ subtask_count }} subtasks</span>
-        {% endif %}
-      </div>
-      {% if notes and notes != "" %}
-        <span class="description" data-clamp="2">{{ notes | escape }}</span>
-      {% endif %}
+    {% if subtask_count > 0 %}
+      <span class="description">{{ subtask_count }} subtasks</span>
     {% endif %}
-  </div>
+    {% if notes and notes != "" %}
+      <span class="description" data-clamp="2">{{ notes | escape }}</span>
+    {% endif %}
+  {% endif %}
 </div>
 {% endtemplate %}
 
