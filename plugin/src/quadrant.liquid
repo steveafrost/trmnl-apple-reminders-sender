@@ -1,7 +1,7 @@
 {% assign show_details = false %}
 
-<div class="layout layout--col layout--top layout--left">
-  <div class="column w--[50cqw]" data-list-limit="true" data-list-hidden-count="true">
+<div class="layout layout--col layout--top">
+  <div class="column w--full" data-list-limit="true" data-list-hidden-count="true">
     {% if reminders %}
       {% for item in reminders %}
         {% render "reminder_v2_item", item: item, show_details: show_details %}
