@@ -4,6 +4,7 @@ public struct ReminderItem: Equatable, Sendable {
     public var title: String
     public var notes: String
     public var dueDate: Date?
+    public var dueIncludesTime: Bool
     public var priority: Int
     public var isFlagged: Bool
     public var listName: String
@@ -13,6 +14,7 @@ public struct ReminderItem: Equatable, Sendable {
         title: String,
         notes: String = "",
         dueDate: Date? = nil,
+        dueIncludesTime: Bool = true,
         priority: Int = 0,
         isFlagged: Bool = false,
         listName: String,
@@ -21,6 +23,7 @@ public struct ReminderItem: Equatable, Sendable {
         self.title = title
         self.notes = notes
         self.dueDate = dueDate
+        self.dueIncludesTime = dueIncludesTime
         self.priority = priority
         self.isFlagged = isFlagged
         self.listName = listName

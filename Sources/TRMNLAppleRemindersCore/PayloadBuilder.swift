@@ -90,7 +90,16 @@ public enum PayloadBuilder {
             [
                 "idx": index + 1,
                 "title": reminder.title,
-                "date": reminder.dueDate.map { relativeDateString($0, now: options.now, calendar: calendar, locale: locale, timeZone: timeZone) } ?? "",
+                "date": reminder.dueDate.map {
+                    relativeDateString(
+                        $0,
+                        includesTime: reminder.dueIncludesTime,
+                        now: options.now,
+                        calendar: calendar,
+                        locale: locale,
+                        timeZone: timeZone
+                    )
+                } ?? "",
                 "num_tasks": reminder.subtasks,
                 "description": reminder.notes
             ] as [String: Any]
@@ -111,7 +120,9 @@ public enum PayloadBuilder {
     ) -> [String: Any] {
         [
             "name": reminder.title,
-            "deadline": reminder.dueDate.map { fullDateString($0, locale: locale, timeZone: timeZone) } ?? "",
+            "deadline": reminder.dueDate.map {
+                fullDateString($0, includesTime: reminder.dueIncludesTime, locale: locale, timeZone: timeZone)
+            } ?? "",
             "priority": priorityString(reminder.priority),
             "flagged": reminder.isFlagged,
             "list": reminder.listName
@@ -147,12 +158,17 @@ public enum PayloadBuilder {
         }
     }
 
-    private static func fullDateString(_ date: Date, locale: Locale, timeZone: TimeZone) -> String {
+    private static func fullDateString(
+        _ date: Date,
+        includesTime: Bool,
+        locale: Locale,
+        timeZone: TimeZone
+    ) -> String {
         let formatter = DateFormatter()
         formatter.locale = locale
         formatter.timeZone = timeZone
         formatter.dateStyle = .medium
-        formatter.timeStyle = .short
+        formatter.timeStyle = includesTime ? .short : .none
         return formatter.string(from: date)
     }
 
@@ -167,6 +183,7 @@ public enum PayloadBuilder {
 
     private static func relativeDateString(
         _ date: Date,
+        includesTime: Bool,
         now: Date,
         calendar: Calendar,
         locale: Locale,
@@ -176,11 +193,13 @@ public enum PayloadBuilder {
         calendar.timeZone = timeZone
 
         let day: String
-        if calendar.isDateInToday(date) {
+        if calendar.isDate(date, inSameDayAs: now) {
             day = "Today"
-        } else if calendar.isDateInTomorrow(date) {
+        } else if let tomorrow = calendar.date(byAdding: .day, value: 1, to: now),
+                  calendar.isDate(date, inSameDayAs: tomorrow) {
             day = "Tomorrow"
-        } else if calendar.isDateInYesterday(date) {
+        } else if let yesterday = calendar.date(byAdding: .day, value: -1, to: now),
+                  calendar.isDate(date, inSameDayAs: yesterday) {
             day = "Yesterday"
         } else {
             let formatter = DateFormatter()
@@ -189,6 +208,10 @@ public enum PayloadBuilder {
             formatter.dateStyle = .medium
             formatter.timeStyle = .none
             day = formatter.string(from: date)
+        }
+
+        guard includesTime else {
+            return day
         }
 
         return "\(day), \(timeString(date, locale: locale, timeZone: timeZone))"

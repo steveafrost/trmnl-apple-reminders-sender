@@ -67,10 +67,12 @@ public final class ReminderReader: @unchecked Sendable {
                 }
 
                 let items = reminders.map { reminder in
-                    ReminderItem(
+                    let dueComponents = reminder.dueDateComponents
+                    return ReminderItem(
                         title: reminder.title ?? "",
                         notes: reminder.notes ?? "",
-                        dueDate: reminder.dueDateComponents?.date,
+                        dueDate: dueComponents?.date,
+                        dueIncludesTime: dueComponents?.hour != nil || dueComponents?.minute != nil,
                         priority: reminder.priority,
                         isFlagged: false,
                         listName: reminder.calendar.title,

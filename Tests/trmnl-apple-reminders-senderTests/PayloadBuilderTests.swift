@@ -58,6 +58,34 @@ import Testing
     #expect(reminders.first?["title"] as? String == "Empty the Litter Robot")
 }
 
+@Test func v2PayloadOmitsTimeForDateOnlyReminders() throws {
+    let timeZone = TimeZone(secondsFromGMT: 0)!
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let now = Date(timeIntervalSince1970: 1_800_000_000)
+    let today = calendar.startOfDay(for: now)
+    let reminder = ReminderItem(
+        title: "Laundry: Dryer -> Fold",
+        dueDate: today,
+        dueIncludesTime: false,
+        listName: "Reminders"
+    )
+
+    let payload = PayloadBuilder.buildPayload(
+        reminders: [reminder],
+        options: SenderOptions(listName: "Reminders", format: .v2, now: now),
+        calendar: calendar,
+        locale: Locale(identifier: "en_US_POSIX"),
+        timeZone: timeZone
+    )
+    let data = try PayloadBuilder.jsonData(from: payload)
+    let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+    let merge = try #require(object["merge_variables"] as? [String: Any])
+    let reminders = try #require(merge["reminders"] as? [[String: Any]])
+
+    #expect(reminders.first?["date"] as? String == "Today")
+}
+
 @Test func cliRejectsMissingWebhookUnlessDryRun() throws {
     #expect(throws: CLIOptionsError.missingWebhook) {
         _ = try CLIOptions(arguments: ["sender"], environment: [:])
