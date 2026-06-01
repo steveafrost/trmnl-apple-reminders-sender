@@ -9,19 +9,19 @@
 <div class="item w--full">
   <div class="meta"></div>
   <div class="content w--full">
-    <span class="title title--small">{% if flagged %}! {% endif %}{{ title | escape }}</span>
+    <span class="title title--small lg:title--base">{% if flagged %}! {% endif %}{{ title | escape }}</span>
     {% if show_details %}
       {% if date and date != "" %}
-        <span class="description">{{ date | escape }}</span>
+        <span class="description lg:description--large">{{ date | escape }}</span>
       {% endif %}
       {% if priority and priority != "" and priority != "None" %}
-        <span class="description">{{ priority | escape }}</span>
+        <span class="description lg:description--large">{{ priority | escape }}</span>
       {% endif %}
       {% if list and list != "" %}
-        <span class="description">{{ list | escape }}</span>
+        <span class="description lg:description--large">{{ list | escape }}</span>
       {% endif %}
       {% if notes and notes != "" %}
-        <span class="description" data-clamp="2">{{ notes | escape }}</span>
+        <span class="description lg:description--large" data-clamp="2">{{ notes | escape }}</span>
       {% endif %}
     {% endif %}
   </div>
@@ -37,16 +37,16 @@
 <div class="item w--full">
   <div class="meta"></div>
   <div class="content w--full">
-    <span class="title title--small">{% if item.idx %}{{ item.idx }}. {% endif %}{{ title | escape }}</span>
+    <span class="title title--small lg:title--base">{% if item.idx %}{{ item.idx }}. {% endif %}{{ title | escape }}</span>
     {% if show_details %}
       {% if date and date != "" %}
-        <span class="description">{{ date | escape }}</span>
+        <span class="description lg:description--large">{{ date | escape }}</span>
       {% endif %}
       {% if subtask_count > 0 %}
-        <span class="description">{{ subtask_count }} subtasks</span>
+        <span class="description lg:description--large">{{ subtask_count }} subtasks</span>
       {% endif %}
       {% if notes and notes != "" %}
-        <span class="description" data-clamp="2">{{ notes | escape }}</span>
+        <span class="description lg:description--large" data-clamp="2">{{ notes | escape }}</span>
       {% endif %}
     {% endif %}
   </div>
@@ -55,11 +55,11 @@
 
 {% template title_bar %}
 <div class="title_bar">
-  <span class="title">Apple Reminders</span>
+  <span class="title lg:title--large">Apple Reminders</span>
   {% if list_name and data_time %}
-    <span class="instance">{{ list_name | escape }} @ {{ data_time | escape }}</span>
+    <span class="instance lg:description--large">{{ list_name | escape }} @ {{ data_time | escape }}</span>
   {% elsif trmnl.plugin_settings.custom_fields_values.expected_format %}
-    <span class="instance">{{ trmnl.plugin_settings.custom_fields_values.expected_format | escape }}</span>
+    <span class="instance lg:description--large">{{ trmnl.plugin_settings.custom_fields_values.expected_format | escape }}</span>
   {% endif %}
 </div>
 {% endtemplate %}

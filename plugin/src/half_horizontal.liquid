@@ -4,14 +4,14 @@
 {% endif %}
 
 <div class="layout layout--row layout--top">
-  <div class="columns">
+  <div class="columns gap--small lg:gap--large">
     <div class="column" data-list-limit="true" data-list-hidden-count="true">
-      <div class="label label--underline mb--2">Today</div>
+      <div class="label label--underline mb--2 lg:mb--4 lg:label--large">Today</div>
       {% if reminders %}
         {% for item in reminders %}
           {% render "reminder_v2_item", item: item, show_details: show_details %}
         {% else %}
-          <span class="description">No reminders for today.</span>
+          <span class="description lg:description--large">No reminders for today.</span>
         {% endfor %}
       {% elsif today.name or today.title or today.n %}
         {% assign item = today %}
@@ -20,13 +20,13 @@
         {% for item in today %}
           {% render "reminder_legacy_item", item: item, show_details: show_details %}
         {% else %}
-          <span class="description">No reminders for today.</span>
+          <span class="description lg:description--large">No reminders for today.</span>
         {% endfor %}
       {% endif %}
     </div>
 
     <div class="column" data-list-limit="true" data-list-hidden-count="true">
-      <div class="label label--underline mb--2">Upcoming</div>
+      <div class="label label--underline mb--2 lg:mb--4 lg:label--large">Upcoming</div>
       {% if future.name or future.title or future.n %}
         {% assign item = future %}
         {% render "reminder_legacy_item", item: item, show_details: show_details %}
@@ -34,7 +34,7 @@
         {% for item in future %}
           {% render "reminder_legacy_item", item: item, show_details: show_details %}
         {% else %}
-          <span class="description">No upcoming reminders.</span>
+          <span class="description lg:description--large">No upcoming reminders.</span>
         {% endfor %}
       {% endif %}
     </div>
