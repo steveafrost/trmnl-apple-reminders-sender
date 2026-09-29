@@ -9,17 +9,25 @@
 {% else %}{% assign window_mode = "all" %}
 {% endif %}
 
+{% assign now_ts = trmnl.user.timestamp | default: 0 | plus: 0 %}
+{% if now_ts <= 0 %}
+{% assign now_ts = "now" | date: "%s" | plus: 0 %}
+{% endif %}
+{% if now_ts <= 0 %}
+{% assign window_mode = "all" %}
+{% endif %}
+
 {% assign window_start = 0 %}
 {% assign window_end = 999999999999 %}
 {% if window_mode == "week" %}
-{% assign window_start = trmnl.user.timestamp | minus: 604800 %}
-{% assign window_end = trmnl.user.timestamp | plus: 604800 %}
+{% assign window_start = now_ts | minus: 604800 %}
+{% assign window_end = now_ts | plus: 604800 %}
 {% elsif window_mode == "month" %}
-{% assign window_start = trmnl.user.timestamp | minus: 2678400 %}
-{% assign window_end = trmnl.user.timestamp | plus: 2678400 %}
+{% assign window_start = now_ts | minus: 2678400 %}
+{% assign window_end = now_ts | plus: 2678400 %}
 {% elsif window_mode == "year" %}
-{% assign window_start = trmnl.user.timestamp | minus: 31536000 %}
-{% assign window_end = trmnl.user.timestamp | plus: 31536000 %}
+{% assign window_start = now_ts | minus: 31536000 %}
+{% assign window_end = now_ts | plus: 31536000 %}
 {% endif %}
 
 {% template reminder_legacy_item %}
