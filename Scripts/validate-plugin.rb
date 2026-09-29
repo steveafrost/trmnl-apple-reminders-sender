@@ -103,6 +103,9 @@ LAYOUTS.each do |layout|
     if rendered_all.include?("Liquid error")
       failures << "#{layout} produced a Liquid error for #{sample} (due_window=all)"
     end
+    if rendered_all =~ /\{[{%#]/
+      failures << "#{layout} leaked unrendered Liquid/comment syntax for #{sample} (due_window=all)"
+    end
 
     # Week render must stay error-free; dated rows' visibility depends on the
     # sample's static epochs vs wall-clock time, so no dated-title assertion here.
