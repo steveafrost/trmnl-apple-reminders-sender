@@ -3,9 +3,11 @@
 {% assign show_details = false %}
 {% endif %}
 
-{# TRMNL Companion "Send Data to Plugin" nests the payload under a key (default
-   "data"). Normalize both shapes: Companion's {"data": {reminders|today|...}}
-   and the macOS sender's top-level {reminders|today|future|overdue}. #}
+{% comment %}
+Companion compatibility: TRMNL Companion "Send Data to Plugin" nests the
+payload under a key (default "data"), while the macOS sender posts top-level
+buckets. Normalize both shapes into the same variables.
+{% endcomment %}
 {% if data %}
   {% if data.reminders %}{% assign reminders = data.reminders %}{% endif %}
   {% if data.today %}{% assign today = data.today %}{% endif %}
