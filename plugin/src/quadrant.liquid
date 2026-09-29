@@ -6,8 +6,9 @@
     {% if reminders %}
       {% for item in reminders %}
         {% assign keep = true %}
-        {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
-          {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+        {% if window_mode != "all" and item.due_ts %}
+          {% assign item_ts = item.due_ts | plus: 0 %}
+          {% if item_ts > 0 %}{% if item_ts < window_start or item_ts > window_end %}{% assign keep = false %}{% endif %}{% endif %}
         {% endif %}
         {% if keep %}
           {% render "reminder_v2_item", item: item, show_details: show_details %}
@@ -17,8 +18,9 @@
     {% elsif today.name or today.title or today.n %}
       {% assign item = today %}
       {% assign keep = true %}
-      {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
-        {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+      {% if window_mode != "all" and item.due_ts %}
+        {% assign item_ts = item.due_ts | plus: 0 %}
+        {% if item_ts > 0 %}{% if item_ts < window_start or item_ts > window_end %}{% assign keep = false %}{% endif %}{% endif %}
       {% endif %}
       {% if keep %}
         {% render "reminder_legacy_item", item: item, show_details: show_details %}
@@ -27,8 +29,9 @@
     {% else %}
       {% for item in today %}
         {% assign keep = true %}
-        {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
-          {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+        {% if window_mode != "all" and item.due_ts %}
+          {% assign item_ts = item.due_ts | plus: 0 %}
+          {% if item_ts > 0 %}{% if item_ts < window_start or item_ts > window_end %}{% assign keep = false %}{% endif %}{% endif %}
         {% endif %}
         {% if keep %}
           {% render "reminder_legacy_item", item: item, show_details: show_details %}

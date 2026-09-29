@@ -1,0 +1,8 @@
+{
+  "data": {
+    "reminders": [
+      {"idx": 1, "title": "Install washing machine hoses", "date": "Today, 12:00 PM", "num_tasks": 0, "description": "Replace the old hoses.", "due_ts": 1800000000},
+      {"idx": 2, "title": "Water the ferns", "date": "", "num_tasks": 0, "description": "", "due_ts": 0}
+    ]
+  }
+}

@@ -16,7 +16,7 @@ PLUGIN = File.join(ROOT, "plugin")
 SRC = File.join(PLUGIN, "src")
 SAMPLES = File.join(PLUGIN, "samples")
 LAYOUTS = %w[full half_horizontal half_vertical quadrant].freeze
-STATIC_SAMPLES = %w[legacy-array legacy-singleton v2].freeze
+STATIC_SAMPLES = %w[legacy-array legacy-singleton v2 companion-v2].freeze
 EXPECTED_TITLE = "Install washing machine hoses"
 
 # The window anchors to the production fallback ("now" | date: "%s") because
@@ -111,9 +111,12 @@ LAYOUTS.each do |layout|
     if rendered_week.include?("Liquid error")
       failures << "#{layout} produced a Liquid error for #{sample} (due_window=week)"
     end
-    if sample == "v2" && !rendered_week.include?("Water the ferns")
-      # the v2 sample's undated row must survive any window
+    if %w[v2 companion-v2].include?(sample) && !rendered_week.include?("Water the ferns")
+      # undated rows must survive any window
       failures << "#{layout} dropped undated row for #{sample} under due_window=week"
+    end
+    if sample == "companion-v2" && !rendered_all.include?("Water the ferns")
+      failures << "#{layout} dropped Companion-nested undated row under due_window=all"
     end
   rescue StandardError => e
     failures << "#{layout} failed for #{sample}: #{e.class}: #{e.message}"

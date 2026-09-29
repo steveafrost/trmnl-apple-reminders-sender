@@ -3,6 +3,16 @@
 {% assign show_details = false %}
 {% endif %}
 
+{# TRMNL Companion "Send Data to Plugin" nests the payload under a key (default
+   "data"). Normalize both shapes: Companion's {"data": {reminders|today|...}}
+   and the macOS sender's top-level {reminders|today|future|overdue}. #}
+{% if data %}
+  {% if data.reminders %}{% assign reminders = data.reminders %}{% endif %}
+  {% if data.today %}{% assign today = data.today %}{% endif %}
+  {% if data.future %}{% assign future = data.future %}{% endif %}
+  {% if data.overdue %}{% assign overdue = data.overdue %}{% endif %}
+{% endif %}
+
 {% if trmnl.plugin_settings.custom_fields_values.due_window == "week" %}{% assign window_mode = "week" %}
 {% elsif trmnl.plugin_settings.custom_fields_values.due_window == "month" %}{% assign window_mode = "month" %}
 {% elsif trmnl.plugin_settings.custom_fields_values.due_window == "year" %}{% assign window_mode = "year" %}
