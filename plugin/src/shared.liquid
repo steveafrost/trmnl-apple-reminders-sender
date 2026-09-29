@@ -80,10 +80,5 @@
 {% template title_bar %}
 <div class="title_bar">
   <span class="title lg:title--large">Apple Reminders</span>
-  {% if list_name and data_time %}
-    <span class="instance lg:description--large">{{ list_name | escape }} @ {{ data_time | escape }}{% if window_mode and window_mode != "all" %} · {{ window_mode }}{% endif %}</span>
-  {% elsif trmnl.plugin_settings.custom_fields_values.expected_format %}
-    <span class="instance lg:description--large">{{ trmnl.plugin_settings.custom_fields_values.expected_format | escape }}{% if window_mode and window_mode != "all" %} · {{ window_mode }}{% endif %}</span>
-  {% endif %}
 </div>
 {% endtemplate %}
