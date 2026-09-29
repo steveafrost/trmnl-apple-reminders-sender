@@ -73,6 +73,16 @@ This is the common Shortcuts bug. The plugin tolerates it so the screen does not
 }
 ```
 
+## Due Window
+
+The plugin instance exposes a `Due Window` custom field (`all`, `week`, `month`, `year`). Non-`all`
+settings keep only reminders due within a rolling window of the screen render time (week = ±7 days,
+month = ±31 days, year = ±365 days). Reminders without a due date always stay visible; dated
+reminders outside the window are hidden.
+
+The recipe filters on a `due_ts` (Unix epoch seconds) field per reminder. The bundled macOS sender
+includes it in both payload formats; older payloads without `due_ts` simply render unfiltered.
+
 ## Validation
 
 From the repo root:
@@ -81,4 +91,6 @@ From the repo root:
 Scripts/validate-plugin.rb
 ```
 
-The validator renders all four layouts against the three sample payloads and checks that the reminder title appears without Liquid errors.
+The validator renders all four layouts against every sample payload under both `due_window=all`
+and `due_window=week`, checking that the expected reminder title renders, out-of-window titles
+are filtered, undated and legacy (no `due_ts`) rows stay visible, and no Liquid errors appear.

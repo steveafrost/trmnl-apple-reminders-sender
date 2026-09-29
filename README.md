@@ -182,14 +182,27 @@ Scripts/validate-plugin.rb
 
 The test suite includes the regression that matters most for the current TRMNL failure: a single reminder in `today` remains encoded as `today: [ ... ]`, not `today: { ... }`.
 
-`Scripts/validate-plugin.rb` renders every plugin layout against all bundled sample payloads:
+`Scripts/validate-plugin.rb` renders every plugin layout against all bundled sample payloads under both `due_window=all` and `due_window=week`:
 
 - `plugin/samples/legacy-array.json`
 - `plugin/samples/legacy-singleton.json`
 - `plugin/samples/v2.json`
+- `plugin/samples/v2-window-mixed.json` (in-window, out-of-window, undated, and legacy rows)
 
 It requires the Ruby `liquid` gem:
 
 ```sh
 gem install --user-install liquid -v 5.3.0
 ```
+
+## Due Window
+
+The plugin instance exposes a `Due Window` custom field (`all`, `week`, `month`, `year`). Non-`all`
+settings keep only reminders due within a rolling window of the render time (week = ±7 days,
+month = ±31 days, year = ±365 days). Reminders without a due date always stay visible; dated
+reminders outside the window are hidden.
+
+Filtering happens in the recipe using a machine-readable `due_ts` (Unix epoch seconds) field that
+the sender includes on every reminder in both payload formats; undated reminders send `due_ts: 0`.
+The web-side field works with any sender payload that carries `due_ts` — payloads without it only
+render unfiltered.

@@ -101,7 +101,8 @@ public enum PayloadBuilder {
                     )
                 } ?? "",
                 "num_tasks": reminder.subtasks,
-                "description": reminder.notes
+                "description": reminder.notes,
+                "due_ts": reminder.dueDate.map { Int($0.timeIntervalSince1970) } ?? 0
             ] as [String: Any]
         }
 
@@ -125,7 +126,8 @@ public enum PayloadBuilder {
             } ?? "",
             "priority": priorityString(reminder.priority),
             "flagged": reminder.isFlagged,
-            "list": reminder.listName
+            "list": reminder.listName,
+            "due_ts": reminder.dueDate.map { Int($0.timeIntervalSince1970) } ?? 0
         ]
     }
 

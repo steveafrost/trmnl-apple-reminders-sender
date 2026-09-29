@@ -86,6 +86,65 @@ import Testing
     #expect(reminders.first?["date"] as? String == "Today")
 }
 
+@Test func v2PayloadIncludesDueTsEpoch() throws {
+    let timeZone = TimeZone(secondsFromGMT: 0)!
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let now = Date(timeIntervalSince1970: 1_800_000_000)
+    let dated = ReminderItem(
+        title: "Install washing machine hoses",
+        dueDate: now,
+        listName: "Reminders"
+    )
+    let undated = ReminderItem(
+        title: "Water the ferns",
+        listName: "Reminders"
+    )
+
+    let payload = PayloadBuilder.buildPayload(
+        reminders: [dated, undated],
+        options: SenderOptions(listName: "Reminders", format: .v2, now: now),
+        calendar: calendar,
+        locale: Locale(identifier: "en_US_POSIX"),
+        timeZone: timeZone
+    )
+    let data = try PayloadBuilder.jsonData(from: payload)
+    let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+    let merge = try #require(object["merge_variables"] as? [String: Any])
+    let reminders = try #require(merge["reminders"] as? [[String: Any]])
+
+    #expect(reminders.first?["due_ts"] as? Int == 1_800_000_000)
+    #expect(reminders.last?["due_ts"] as? Int == 0)
+}
+
+@Test func legacyPayloadIncludesDueTsInBuckets() throws {
+    let now = Date(timeIntervalSince1970: 1_800_000_000)
+    let dated = ReminderItem(
+        title: "Install washing machine hoses",
+        dueDate: now,
+        listName: "Reminders"
+    )
+    let undated = ReminderItem(
+        title: "Water the ferns",
+        listName: "Reminders"
+    )
+
+    let payload = PayloadBuilder.buildPayload(
+        reminders: [dated, undated],
+        options: SenderOptions(listName: "Reminders", format: .legacy, includeUndated: true, now: now),
+        locale: Locale(identifier: "en_US_POSIX"),
+        timeZone: TimeZone(secondsFromGMT: 0)!
+    )
+    let data = try PayloadBuilder.jsonData(from: payload)
+    let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+    let merge = try #require(object["merge_variables"] as? [String: Any])
+    let today = try #require(merge["today"] as? [[String: Any]])
+    let future = try #require(merge["future"] as? [[String: Any]])
+
+    #expect(today.first?["due_ts"] as? Int == 1_800_000_000)
+    #expect(future.first?["due_ts"] as? Int == 0)
+}
+
 @Test func cliRejectsMissingWebhookUnlessDryRun() throws {
     #expect(throws: CLIOptionsError.missingWebhook) {
         _ = try CLIOptions(arguments: ["sender"], environment: [:])

@@ -37,3 +37,13 @@ custom_fields:
   - 'yes'
   - 'no'
   description: Show reminder dates, notes, priorities, and list names where available.
+- keyname: due_window
+  field_type: select
+  name: Due Window
+  default: all
+  options:
+  - all
+  - week
+  - month
+  - year
+  description: Show only reminders due within a rolling window from today (week = ±7 days, month = ±31 days, year = ±365 days). Reminders without a due date always show; items past the window are hidden. Requires a sender that includes due_ts.

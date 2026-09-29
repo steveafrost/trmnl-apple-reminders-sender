@@ -1,3 +1,27 @@
+{% assign show_details = true %}
+{% if trmnl.plugin_settings.custom_fields_values.show_details == "no" %}
+{% assign show_details = false %}
+{% endif %}
+
+{% if trmnl.plugin_settings.custom_fields_values.due_window == "week" %}{% assign window_mode = "week" %}
+{% elsif trmnl.plugin_settings.custom_fields_values.due_window == "month" %}{% assign window_mode = "month" %}
+{% elsif trmnl.plugin_settings.custom_fields_values.due_window == "year" %}{% assign window_mode = "year" %}
+{% else %}{% assign window_mode = "all" %}
+{% endif %}
+
+{% assign window_start = 0 %}
+{% assign window_end = 999999999999 %}
+{% if window_mode == "week" %}
+{% assign window_start = trmnl.user.timestamp | minus: 604800 %}
+{% assign window_end = trmnl.user.timestamp | plus: 604800 %}
+{% elsif window_mode == "month" %}
+{% assign window_start = trmnl.user.timestamp | minus: 2678400 %}
+{% assign window_end = trmnl.user.timestamp | plus: 2678400 %}
+{% elsif window_mode == "year" %}
+{% assign window_start = trmnl.user.timestamp | minus: 31536000 %}
+{% assign window_end = trmnl.user.timestamp | plus: 31536000 %}
+{% endif %}
+
 {% template reminder_legacy_item %}
 {% assign title = item.name | default: item.title | default: item.n %}
 {% assign date = item.deadline | default: item.date | default: item.d %}
@@ -57,9 +81,9 @@
 <div class="title_bar">
   <span class="title lg:title--large">Apple Reminders</span>
   {% if list_name and data_time %}
-    <span class="instance lg:description--large">{{ list_name | escape }} @ {{ data_time | escape }}</span>
+    <span class="instance lg:description--large">{{ list_name | escape }} @ {{ data_time | escape }}{% if window_mode and window_mode != "all" %} · {{ window_mode }}{% endif %}</span>
   {% elsif trmnl.plugin_settings.custom_fields_values.expected_format %}
-    <span class="instance lg:description--large">{{ trmnl.plugin_settings.custom_fields_values.expected_format | escape }}</span>
+    <span class="instance lg:description--large">{{ trmnl.plugin_settings.custom_fields_values.expected_format | escape }}{% if window_mode and window_mode != "all" %} · {{ window_mode }}{% endif %}</span>
   {% endif %}
 </div>
 {% endtemplate %}

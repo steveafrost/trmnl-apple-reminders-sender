@@ -7,52 +7,117 @@
   <div class="columns gap--small lg:gap--large">
     <div class="column" data-list-limit="true" data-list-hidden-count="true">
       <div class="label label--underline mb--2 lg:mb--4 lg:label--large">Overdue</div>
+      {% assign overdue_shown = false %}
       {% if overdue.name or overdue.title or overdue.n %}
         {% assign item = overdue %}
-        {% render "reminder_legacy_item", item: item, show_details: show_details %}
+        {% assign keep = true %}
+        {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
+          {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+        {% endif %}
+        {% if keep %}
+          {% render "reminder_legacy_item", item: item, show_details: show_details %}
+          {% assign overdue_shown = true %}
+        {% endif %}
       {% else %}
         {% for item in overdue %}
-          {% render "reminder_legacy_item", item: item, show_details: show_details %}
-        {% else %}
-          <span class="description lg:description--large">No overdue reminders.</span>
+          {% assign keep = true %}
+          {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
+            {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+          {% endif %}
+          {% if keep %}
+            {% render "reminder_legacy_item", item: item, show_details: show_details %}
+            {% assign overdue_shown = true %}
+          {% endif %}
         {% endfor %}
       {% endif %}
+      {% unless overdue_shown %}
+        {% if window_mode == "all" %}
+          <span class="description lg:description--large">No overdue reminders.</span>
+        {% else %}
+          <span class="description lg:description--large">Nothing overdue in this window.</span>
+        {% endif %}
+      {% endunless %}
     </div>
 
     <div class="column" data-list-limit="true" data-list-hidden-count="true">
       <div class="label label--underline mb--2 lg:mb--4 lg:label--large">Today</div>
+      {% assign today_shown = false %}
       {% if reminders %}
         {% for item in reminders %}
-          {% render "reminder_v2_item", item: item, show_details: show_details %}
-        {% else %}
-          <span class="description lg:description--large">No reminders for today.</span>
+          {% assign keep = true %}
+          {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
+            {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+          {% endif %}
+          {% if keep %}
+            {% render "reminder_v2_item", item: item, show_details: show_details %}
+            {% assign today_shown = true %}
+          {% endif %}
         {% endfor %}
       {% elsif today.name or today.title or today.n %}
         {% assign item = today %}
-        {% render "reminder_legacy_item", item: item, show_details: show_details %}
+        {% assign keep = true %}
+        {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
+          {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+        {% endif %}
+        {% if keep %}
+          {% render "reminder_legacy_item", item: item, show_details: show_details %}
+          {% assign today_shown = true %}
+        {% endif %}
       {% else %}
         {% for item in today %}
-          {% render "reminder_legacy_item", item: item, show_details: show_details %}
-        {% else %}
-          <span class="description lg:description--large">No reminders for today.</span>
+          {% assign keep = true %}
+          {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
+            {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+          {% endif %}
+          {% if keep %}
+            {% render "reminder_legacy_item", item: item, show_details: show_details %}
+            {% assign today_shown = true %}
+          {% endif %}
         {% endfor %}
       {% endif %}
+      {% unless today_shown %}
+        {% if window_mode == "all" %}
+          <span class="description lg:description--large">No reminders for today.</span>
+        {% else %}
+          <span class="description lg:description--large">Nothing today in this window.</span>
+        {% endif %}
+      {% endunless %}
     </div>
 
     <div class="column" data-list-limit="true" data-list-hidden-count="true">
       <div class="label label--underline mb--2 lg:mb--4 lg:label--large">Upcoming</div>
+      {% assign future_shown = false %}
       {% if future.name or future.title or future.n %}
         {% assign item = future %}
-        {% render "reminder_legacy_item", item: item, show_details: show_details %}
+        {% assign keep = true %}
+        {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
+          {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+        {% endif %}
+        {% if keep %}
+          {% render "reminder_legacy_item", item: item, show_details: show_details %}
+          {% assign future_shown = true %}
+        {% endif %}
       {% else %}
         {% for item in future %}
-          {% render "reminder_legacy_item", item: item, show_details: show_details %}
-        {% else %}
-          <span class="description lg:description--large">No upcoming reminders.</span>
+          {% assign keep = true %}
+          {% if window_mode != "all" and item.due_ts and item.due_ts > 0 %}
+            {% if item.due_ts < window_start or item.due_ts > window_end %}{% assign keep = false %}{% endif %}
+          {% endif %}
+          {% if keep %}
+            {% render "reminder_legacy_item", item: item, show_details: show_details %}
+            {% assign future_shown = true %}
+          {% endif %}
         {% endfor %}
       {% endif %}
+      {% unless future_shown %}
+        {% if window_mode == "all" %}
+          <span class="description lg:description--large">No upcoming reminders.</span>
+        {% else %}
+          <span class="description lg:description--large">Nothing upcoming in this window.</span>
+        {% endif %}
+      {% endunless %}
     </div>
   </div>
 </div>
 
-{% render "title_bar", trmnl: trmnl, list_name: list_name, data_time: data_time %}
+{% render "title_bar", trmnl: trmnl, list_name: list_name, data_time: data_time, window_mode: window_mode %}

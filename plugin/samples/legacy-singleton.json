@@ -6,7 +6,8 @@
     "priority": "None",
     "flagged": false,
     "list": "Reminders",
-    "notes": "This reproduces the Shortcuts singleton-object bug."
+    "notes": "This reproduces the Shortcuts singleton-object bug.",
+    "due_ts": 1800000000
   },
   "future": []
 }
